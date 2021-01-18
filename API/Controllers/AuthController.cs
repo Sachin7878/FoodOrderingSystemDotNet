@@ -30,8 +30,33 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("Register")]
-        //POST : /api/ApplicationUser/Register
-        public async Task<Object> PostApplicationUser(UserRegisterModel model)
+        //POST : /api/Auth/Register
+        public async Task<Object> RegisterUser(UserRegisterModel model)
+        {
+            var applicationUser = new ApplicationUser() {
+                UserName = model.Email,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName
+            };
+
+            try
+            {
+                var result = await _userManager.CreateAsync(applicationUser, model.Password);
+                await _userManager.AddToRoleAsync(applicationUser, model.Role);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        [Route("register/vendor")]
+        //POST : /api/Auth/Register
+        public async Task<Object> RegisterVendor(VendorRegisterModel model)
         {
             var applicationUser = new ApplicationUser() {
                 UserName = model.Email,
@@ -55,7 +80,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("Login")]
-        //POST : /api/ApplicationUser/Login
+        //POST : /api/Auth/Login
         public async Task<IActionResult> Login(AuthRequestModel model)
         {
             var user = await _userManager.FindByNameAsync(model.Email);
@@ -82,7 +107,7 @@ namespace API.Controllers
                 {
                     Token = token, 
                     ExpiresIn = "18000",
-                    Role = role.FirstOrDefault()
+                    Role = role.FirstOrDefault()?.ToLower()
                 });
             }
             else

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
-    [Route("/[controller]")]
+    [Route("hotels")]
     [ApiController]
     public class HotelsController : ControllerBase
     {

@@ -29,7 +29,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("Register")]
+        [Route("register")]
         //POST : /api/Auth/Register
         public async Task<Object> RegisterUser(UserRegisterModel model)
         {
@@ -77,7 +77,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("Login")]
+        [Route("login")]
         //POST : /api/Auth/Login
         public async Task<IActionResult> Login(AuthRequestModel model)
         {

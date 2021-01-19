@@ -11,6 +11,11 @@ namespace API.DTO
         public string MobileNo { get; set; }
         public Address Address { get; set; }
 
+        public UserModel()
+        {
+            
+        }
+
         public UserModel(ApplicationUser user)
         {
             Id = user.Id;

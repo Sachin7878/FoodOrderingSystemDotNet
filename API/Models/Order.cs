@@ -38,5 +38,15 @@ namespace API.Models
             orderItems.ForEach(i => GrandTotal =+ i.Amount);
             Status = OrderStatus.Pending;
         }
+
+        public double CalculateGrandTotal(List<OrderItem> orderItems)
+        {
+            var amt = 0.0;
+            foreach (var i in orderItems)
+            {
+                amt = +i.Amount;
+            }
+            return amt;
+        }
     }
 }

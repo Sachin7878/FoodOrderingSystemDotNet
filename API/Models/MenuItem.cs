@@ -18,7 +18,6 @@ namespace API.Models
         [Required]
         public bool Available { get; set; }
 
-        [Required]
         public Hotel Hotel { get; set; }    
     }
 }

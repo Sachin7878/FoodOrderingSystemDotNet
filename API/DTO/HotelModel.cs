@@ -1,4 +1,6 @@
-﻿namespace API.DTO
+﻿using API.Models;
+
+namespace API.DTO
 {
     public class HotelModel
     {
@@ -6,15 +8,11 @@
         public string HotelName { get; set; }
         public string MobileNo { get; set; }
 
-        public HotelModel()
+        public HotelModel(Hotel hotel)
         {
-            
-        }
-        public HotelModel(long id, string hotelName, string mobileNo)
-        {
-            Id = id;
-            HotelName = hotelName;
-            MobileNo = mobileNo;
+            Id = hotel.Id;
+            HotelName = hotel.HotelName;
+            MobileNo = hotel.MobileNo;
         }
     }
 }

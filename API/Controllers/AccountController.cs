@@ -70,7 +70,7 @@ namespace API.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             user.Address.AddressLine1 = userAddress.AddressLine1;
             user.Address.AddressLine2 = userAddress.AddressLine2;
-            user.Address.PinCode = userAddress.PinCode;
+            user.Address.Pincode = userAddress.Pincode;
             user.Address.City = userAddress.City;
             user.Address.State = userAddress.State;
             user.Address.Country = userAddress.Country;

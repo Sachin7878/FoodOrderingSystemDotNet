@@ -24,17 +24,17 @@ namespace API.Controllers
         
         [HttpGet]
         [Authorize(Roles = "User")]
-        public async Task<Cart> GetCustomerCart()
+        public async Task<List<CartItem>> GetCustomerCart()
         {
             var userId = User.Claims.First(c => c.Type == "UserID").Value;
-            var userCart = await _context.Carts.FirstOrDefaultAsync(c => c.Customer.Id == userId);
+            var userCart = await _context.Carts.SingleOrDefaultAsync(c => c.Customer.Id == userId);
             if (userCart == null)
             {
-                userCart = new Cart {Customer = await _userManager.FindByIdAsync(userId)};
+                userCart = new Cart {Customer = await _userManager.FindByIdAsync(userId), CartItems = new List<CartItem>()};
             }
             await _context.Carts.AddAsync(userCart);
             await _context.SaveChangesAsync();
-            return userCart;
+            return userCart.CartItems;
         }
         
         [HttpPost]

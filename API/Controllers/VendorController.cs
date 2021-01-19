@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using API.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
@@ -14,7 +13,7 @@ namespace API.Controllers
 
         private readonly AuthenticationContext _context;
 
-        public VendorController(AuthenticationContext context, UserManager<ApplicationUser> userManager)
+        public VendorController(AuthenticationContext context)
         {
             _context = context;
         }

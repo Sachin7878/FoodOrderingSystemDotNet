@@ -24,7 +24,7 @@ namespace API.Models
         public string Country { get; set; }
 
         [Required]
-        public string PinCode { get; set; }
+        public string Pincode { get; set; }
 
     }
 }

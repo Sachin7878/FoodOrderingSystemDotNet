@@ -12,18 +12,14 @@ namespace API.DTO
         public Address CustomerAddress { get; set; }
         public OrderStatus Status { get; set; }
 
-        public OrderModel()
+        public OrderModel(Order order)
         {
-            
-        }
-        public OrderModel(long orderId, double grandTotal, HotelModel hotel, List<OrderItem> orderItems, Address customerAddress, OrderStatus status)
-        {
-            OrderId = orderId;
-            GrandTotal = grandTotal;
-            Hotel = hotel;
-            OrderItems = orderItems;
-            CustomerAddress = customerAddress;
-            Status = status;
+            OrderId = order.Id;
+            GrandTotal = order.GrandTotal;
+            Hotel = new HotelModel(order.Hotel);
+            OrderItems = order.OrderItems;
+            CustomerAddress = order.Customer.Address;
+            Status = order.Status;
         }
     }
 }

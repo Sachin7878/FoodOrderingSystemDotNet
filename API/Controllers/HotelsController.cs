@@ -20,17 +20,17 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
+        public async Task<ActionResult<IEnumerable<Hotel>>> FetchHotels()
         {
             var hotels = await _context.Hotels.ToListAsync();
             return Ok(new {Content = hotels});
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Hotel>> GetHotel(long id)
+        public async Task<ActionResult<Hotel>> FetchHotelById(long id)
         {
-            var hotel = await _context.Hotels.FindAsync(id);
-
+            var hotel = await _context.Hotels.Include(h => h.Address).FirstOrDefaultAsync(x => x.Id == id);
+            
             if (hotel == null)
             {
                 return NotFound();
@@ -41,13 +41,14 @@ namespace API.Controllers
         
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PutHotel(long id, Hotel hotel)
+        public async Task<IActionResult> UpdateHotel(long id, Hotel hotel, [FromQuery] string email)
         {
             if (id != hotel.Id)
             {
                 return BadRequest();
             }
-
+            var vendorByEmail = await _context.ApplicationUsers.FirstOrDefaultAsync(u => u.Email == email);
+            hotel.Vendor = vendorByEmail;
             _context.Entry(hotel).State = EntityState.Modified;
 
             try
@@ -69,12 +70,14 @@ namespace API.Controllers
         
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
+        public async Task<ActionResult<Hotel>> CreateHotel(Hotel hotel, [FromQuery] string email)
         {
+            var vendorByEmail = await _context.ApplicationUsers.FirstOrDefaultAsync(u => u.Email == email);
+            hotel.Vendor = vendorByEmail;
             await _context.Hotels.AddAsync(hotel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetHotel", new { id = hotel.Id }, hotel);
+            return CreatedAtAction("FetchHotelById", new { id = hotel.Id }, hotel);
         }
         
         [HttpDelete("{id}")]
@@ -104,8 +107,10 @@ namespace API.Controllers
 
         [HttpPost("{id}/menu/")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Hotel>> PostMenuItem(long id, MenuItem item)
+        public async Task<OkObjectResult> AddMenuItem(long id, MenuItem item)
         {
+            var hotel = await _context.Hotels.FindAsync(id);
+            item.Hotel = hotel;
             await _context.MenuItems.AddAsync(item);
             await _context.SaveChangesAsync();
 
@@ -114,7 +119,7 @@ namespace API.Controllers
 
         [HttpDelete("{hotelId}/menu/{menuId}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Hotel>> DeleteHotel(long hotelId, long menuId)
+        public async Task<ActionResult<Hotel>> DeleteMenuItem(long hotelId, long menuId)
         {
             var menuItem = _context.MenuItems.Where(i => i.Hotel.Id == hotelId).First(m => m.Id == menuId);
             if (menuItem == null)
@@ -128,7 +133,7 @@ namespace API.Controllers
 
         [HttpPut("{hotelId}/menu/{menuId}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PutMenuItem(long hotelId, long menuId, MenuItem item)
+        public async Task<IActionResult> UpdateMenuItem(long hotelId, long menuId, MenuItem item)
         {
             if (menuId != item.Id)
             {

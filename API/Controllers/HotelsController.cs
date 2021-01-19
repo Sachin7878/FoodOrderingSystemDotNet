@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -44,6 +45,7 @@ namespace API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Vendor")]
         public async Task<IActionResult> PutHotel(long id, Hotel hotel)
         {
             if (id != hotel.Id)
@@ -76,6 +78,7 @@ namespace API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize(Roles = "Admin,Vendor")]
         public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
         {
             await _context.Hotels.AddAsync(hotel);
@@ -86,6 +89,7 @@ namespace API.Controllers
 
         // DELETE: api/Hotels/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Vendor")]
         public async Task<ActionResult<Hotel>> DeleteHotel(long id)
         {
             var hotel = await _context.Hotels.FindAsync(id);
@@ -123,6 +127,7 @@ namespace API.Controllers
         }
 
         [HttpPost("{id}/menu/")]
+        [Authorize(Roles = "Admin,Vendor")]
         public async Task<ActionResult<Hotel>> PostMenuItem(long id, MenuItem item)
         {
             await _context.MenuItems.AddAsync(item);
@@ -133,6 +138,7 @@ namespace API.Controllers
 
         // DELETE: api/Hotels/5/menu/1
         [HttpDelete("{hotelId}/menu/{menuId}")]
+        [Authorize(Roles = "Admin,Vendor")]
         public async Task<ActionResult<Hotel>> DeleteHotel(long hotelId, long menuId)
         {
             var menuItem = _context.MenuItems.Where(i => i.Hotel.Id == hotelId).First(m => m.Id == menuId);
@@ -146,6 +152,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{hotelId}/menu/{menuId}")]
+        [Authorize(Roles = "Admin,Vendor")]
         public async Task<IActionResult> PutMenuItem(long hotelId, long menuId, MenuItem item)
         {
             if (menuId != item.Id)
@@ -175,7 +182,6 @@ namespace API.Controllers
         }
 
         //helper methods
-
         private bool HotelExists(long id)
         {
             return _context.Hotels.Any(e => e.Id == id);

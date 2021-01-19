@@ -15,7 +15,6 @@ namespace API.Models
         [Required]
         public string MobileNo { get; set; }
         
-        [Required]
         public Address Address { get; set; }
 
         public ApplicationUser Vendor { get; set; }

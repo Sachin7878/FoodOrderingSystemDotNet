@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using API.DTO;
 using API.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -20,10 +21,12 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Route("account")]
         public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetAccount()
         {
             var applicationUser = await _userManager.GetUserAsync(User);
-            return Ok(applicationUser);
+            var currentUser = new UserModel(applicationUser);
+            return Ok(currentUser);
         }
     }
 }

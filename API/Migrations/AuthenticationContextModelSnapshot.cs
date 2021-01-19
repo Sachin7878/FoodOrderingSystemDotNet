@@ -27,21 +27,26 @@ namespace API.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AddressLine1")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AddressLine2")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("PinCode")
-                        .HasColumnType("bigint");
+                    b.Property<string>("PinCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("State")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -76,7 +81,7 @@ namespace API.Migrations
                     b.Property<long?>("CartId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("ItemId")
+                    b.Property<long>("ItemId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("Quantity")
@@ -98,10 +103,11 @@ namespace API.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("AddressId")
+                    b.Property<long>("AddressId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("HotelName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("Image")
@@ -111,6 +117,7 @@ namespace API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MobileNo")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VendorId")
@@ -135,10 +142,11 @@ namespace API.Migrations
                     b.Property<bool>("Available")
                         .HasColumnType("bit");
 
-                    b.Property<long?>("HotelId")
+                    b.Property<long>("HotelId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("ItemName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("ItemPrice")
@@ -418,7 +426,8 @@ namespace API.Migrations
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(150)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(70)");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
@@ -441,14 +450,18 @@ namespace API.Migrations
 
                     b.HasOne("API.Models.MenuItem", "Item")
                         .WithMany()
-                        .HasForeignKey("ItemId");
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("API.Models.Hotel", b =>
                 {
                     b.HasOne("API.Models.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId");
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("API.Models.ApplicationUser", "Vendor")
                         .WithMany()
@@ -459,7 +472,9 @@ namespace API.Migrations
                 {
                     b.HasOne("API.Models.Hotel", "Hotel")
                         .WithMany()
-                        .HasForeignKey("HotelId");
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("API.Models.Order", b =>

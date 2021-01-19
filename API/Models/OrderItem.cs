@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace API.Models
 {
@@ -12,8 +8,23 @@ namespace API.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
+
+        [Required]
         public MenuItem Item { get; set; }
+
+        [Required]
         public int Quantity { get; set; }
         public double Amount { get; set; }
+
+        public OrderItem()
+        {
+            Amount = Item.ItemPrice * Quantity;
+        }
+        public OrderItem( MenuItem item, int quantity)
+        {
+            Item = item;
+            Quantity = quantity;
+            Amount = item.ItemPrice * quantity;
+        }
     }
 }

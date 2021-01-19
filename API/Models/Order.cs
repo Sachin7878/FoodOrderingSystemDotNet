@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace API.Models
 {
@@ -16,11 +13,30 @@ namespace API.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
-
+        
+        [Required]
         public ApplicationUser Customer { get; set; }
+
+        [Required]
         public Hotel Hotel { get; set; }
+
+        [Required]
         public List<OrderItem> OrderItems { get; set; }
         public double GrandTotal { get; set; }
         public OrderStatus Status { get; set; }
+
+        public Order()
+        {
+            
+        }
+
+        public Order(ApplicationUser customer, Hotel hotel, List<OrderItem> orderItems, OrderStatus status)
+        {
+            Customer = customer;
+            Hotel = hotel;
+            OrderItems = orderItems;
+            orderItems.ForEach(i => GrandTotal =+ i.Amount);
+            Status = OrderStatus.Pending;
+        }
     }
 }

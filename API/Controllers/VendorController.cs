@@ -13,12 +13,10 @@ namespace API.Controllers
     {
 
         private readonly AuthenticationContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
 
         public VendorController(AuthenticationContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
-            _userManager = userManager;
         }
 
         [HttpGet]

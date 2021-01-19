@@ -17,7 +17,7 @@ namespace API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _singInManager;
         private readonly ApplicationSettings _appSettings;
 
@@ -48,7 +48,6 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
@@ -73,7 +72,6 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
@@ -88,7 +86,7 @@ namespace API.Controllers
             {
                 //Get role assigned to the user
                 var role = await _userManager.GetRolesAsync(user);
-                IdentityOptions _options = new IdentityOptions();
+                var _options = new IdentityOptions();
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {

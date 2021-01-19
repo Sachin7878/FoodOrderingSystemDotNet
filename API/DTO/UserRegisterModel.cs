@@ -6,7 +6,6 @@
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        private string _role = "User";
 
         public string Role { get; set; }
 

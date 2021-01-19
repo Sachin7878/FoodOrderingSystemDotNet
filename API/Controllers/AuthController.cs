@@ -30,7 +30,6 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("register")]
-        //POST : /api/Auth/Register
         public async Task<Object> RegisterUser(UserRegisterModel model)
         {
             var applicationUser = new ApplicationUser() {
@@ -54,7 +53,6 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("register/vendor")]
-        //POST : /api/Auth/Register
         public async Task<Object> RegisterVendor(VendorRegisterModel model)
         {
             var applicationUser = new ApplicationUser() {
@@ -78,13 +76,11 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("login")]
-        //POST : /api/Auth/Login
         public async Task<IActionResult> Login(AuthRequestModel model)
         {
             var user = await _userManager.FindByNameAsync(model.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                //Get role assigned to the user
                 var role = await _userManager.GetRolesAsync(user);
                 var _options = new IdentityOptions();
 
@@ -108,12 +104,12 @@ namespace API.Controllers
                     Role = role.FirstOrDefault()?.ToLower()
                 });
             }
-            else
-                return BadRequest(new ErrorResponse()
-                {
-                   Message = "Email or Password not incorrect!",
-                   TimeStamp = DateTime.Now
-                });
+
+            return BadRequest(new ErrorResponse()
+            {
+                Message = "Email or Password not incorrect!",
+                TimeStamp = DateTime.Now
+            });
         }
     }
 }

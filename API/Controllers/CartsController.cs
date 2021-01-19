@@ -21,8 +21,7 @@ namespace API.Controllers
             _context = context;
             _userManager = userManager;
         }
-
-        // GET: /Cart
+        
         [HttpGet]
         [Authorize(Roles = "User")]
         public async Task<Cart> GetCustomerCart()
@@ -37,10 +36,7 @@ namespace API.Controllers
             await _context.SaveChangesAsync();
             return userCart;
         }
-
-        // POST: cart
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        
         [HttpPost]
         [Authorize(Roles = "User")]
         public async Task<List<CartItem>> AddCartItem(CartItem cartItem)
@@ -53,8 +49,7 @@ namespace API.Controllers
 
             return cartList;
         }
-
-        // DELETE: cart/5
+        
         [HttpDelete("{cartItemId}")]
         [Authorize(Roles = "User")]
         public async Task<List<CartItem>> RemoveCartItem(long cartItemId)
@@ -66,8 +61,7 @@ namespace API.Controllers
             await _context.SaveChangesAsync();
             return userCart.CartItems;
         }
-
-        // DELETE: cart/
+        
         [HttpDelete]
         [Authorize(Roles = "User")]
         public async Task<OkResult> ClearCart()
@@ -78,10 +72,7 @@ namespace API.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-
-        // PUT: /Cart/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        
         [HttpPut("updateQty")]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> UpdateQuantity(CartItem cartItem)

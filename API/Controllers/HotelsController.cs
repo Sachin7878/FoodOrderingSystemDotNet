@@ -19,7 +19,6 @@ namespace API.Controllers
             _context = context;
         }
 
-        // GET: api/Hotels
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
         {
@@ -27,7 +26,6 @@ namespace API.Controllers
             return Ok(new {Content = hotels});
         }
 
-        // GET: api/Hotels/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Hotel>> GetHotel(long id)
         {
@@ -40,12 +38,9 @@ namespace API.Controllers
 
             return hotel;
         }
-
-        // PUT: api/Hotels/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin,Vendor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutHotel(long id, Hotel hotel)
         {
             if (id != hotel.Id)
@@ -65,20 +60,15 @@ namespace API.Controllers
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
 
             return NoContent();
         }
-
-        // POST: api/Hotels
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        
         [HttpPost]
-        [Authorize(Roles = "Admin,Vendor")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
         {
             await _context.Hotels.AddAsync(hotel);
@@ -86,10 +76,9 @@ namespace API.Controllers
 
             return CreatedAtAction("GetHotel", new { id = hotel.Id }, hotel);
         }
-
-        // DELETE: api/Hotels/5
+        
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin,Vendor")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Hotel>> DeleteHotel(long id)
         {
             var hotel = await _context.Hotels.FindAsync(id);
@@ -104,19 +93,6 @@ namespace API.Controllers
             return Ok();
         }
 
-        //[HttpPost("{id}/image")]
-        //public async Task<ActionResult<Hotel>> PostImage(long id, FormFile imageFile)
-        //{
-        //    var hotel = await _context.Hotels.FindAsync(id);
-        //    if (hotel == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    imageFile.
-
-        //    return null;
-        //}
-
         //Menu Items CRUD
 
         [HttpGet("{id}/menu/")]
@@ -127,7 +103,7 @@ namespace API.Controllers
         }
 
         [HttpPost("{id}/menu/")]
-        [Authorize(Roles = "Admin,Vendor")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Hotel>> PostMenuItem(long id, MenuItem item)
         {
             await _context.MenuItems.AddAsync(item);
@@ -136,9 +112,8 @@ namespace API.Controllers
             return Ok(item);
         }
 
-        // DELETE: api/Hotels/5/menu/1
         [HttpDelete("{hotelId}/menu/{menuId}")]
-        [Authorize(Roles = "Admin,Vendor")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Hotel>> DeleteHotel(long hotelId, long menuId)
         {
             var menuItem = _context.MenuItems.Where(i => i.Hotel.Id == hotelId).First(m => m.Id == menuId);
@@ -152,7 +127,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{hotelId}/menu/{menuId}")]
-        [Authorize(Roles = "Admin,Vendor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutMenuItem(long hotelId, long menuId, MenuItem item)
         {
             if (menuId != item.Id)
@@ -172,10 +147,8 @@ namespace API.Controllers
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
 
             return NoContent();

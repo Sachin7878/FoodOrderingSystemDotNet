@@ -14,7 +14,6 @@ namespace API.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-
         private readonly AuthenticationContext _context;
 
         public OrderController(AuthenticationContext context)
@@ -27,7 +26,10 @@ namespace API.Controllers
         public List<OrderModel> GetOrders()
         {
             var userId = User.Claims.First(c => c.Type == "UserID").Value;
-            var userOrders = _context.Orders.Where(o => o.Customer.Id == userId);
+            var userOrders = _context.Orders.Include(h => h.Hotel)
+                .Include(c => c.Customer).ThenInclude(a => a.Address)
+                .Include(o => o.OrderItems).ThenInclude(o => o.Item)
+                .Where(o => o.Customer.Id == userId);
             var list = new List<OrderModel>();
             foreach (var order in userOrders) list.Add(new OrderModel(order));
             return list;
@@ -48,7 +50,9 @@ namespace API.Controllers
         {
             var userId = User.Claims.First(c => c.Type == "UserID").Value;
             var user = await _context.ApplicationUsers.FindAsync(userId);
-            var userCart = await _context.Carts.FirstOrDefaultAsync(c => c.Customer.Id == userId);
+            var userCart = await _context.Carts.Include(c => c.CartItems)
+                .ThenInclude(m => m.Item)
+                .ThenInclude(h => h.Hotel).FirstOrDefaultAsync(c => c.Customer.Id == userId);
             var cartItems = userCart.CartItems;
             var itemHotel = cartItems.FirstOrDefault()?.Item.Hotel;
             var orderItems = new List<OrderItem>();
@@ -79,9 +83,9 @@ namespace API.Controllers
         }
 
         [HttpPost("{orderId}")]
-        public async Task<OkResult> UpdateStatus(long orderId,string status)
+        public async Task<OkResult> UpdateStatus(long orderId, string status)
         {
-            var myEnum = (OrderStatus)Enum.Parse(typeof(OrderStatus), status, true);
+            var myEnum = (OrderStatus) Enum.Parse(typeof(OrderStatus), status, true);
             var orderToUpdate = await _context.Orders.FindAsync(orderId);
             orderToUpdate.Status = myEnum;
             await _context.SaveChangesAsync();

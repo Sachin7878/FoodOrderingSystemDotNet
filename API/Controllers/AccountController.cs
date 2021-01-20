@@ -5,6 +5,7 @@ using API.DTO;
 using API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -26,7 +27,7 @@ namespace API.Controllers
         [Route("account")]
         public async Task<UserModel> FetchUserAccount() {
             var userId = User.Claims.First(c => c.Type == "UserID").Value;
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _context.ApplicationUsers.Include(a => a.Address).SingleOrDefaultAsync(u => u.Id == userId);
             return new UserModel(user);
         }
 

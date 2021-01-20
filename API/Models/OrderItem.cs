@@ -18,9 +18,8 @@ namespace API.Models
 
         public OrderItem()
         {
-            Amount = Item.ItemPrice * Quantity;
         }
-        public OrderItem( MenuItem item, int quantity)
+        public OrderItem(MenuItem item, int quantity)
         {
             Item = item;
             Quantity = quantity;

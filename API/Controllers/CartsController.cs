@@ -27,13 +27,16 @@ namespace API.Controllers
         public async Task<List<CartItem>> GetCustomerCart()
         {
             var userId = User.Claims.First(c => c.Type == "UserID").Value;
-            var userCart = await _context.Carts.SingleOrDefaultAsync(c => c.Customer.Id == userId);
+            var user = await _userManager.FindByIdAsync(userId);
+            var userCart = await _context.Carts.Include(i => i.CartItems)
+                .ThenInclude(c => c.Item)
+                .SingleOrDefaultAsync(c => c.Customer.Id == userId);
             if (userCart == null)
             {
-                userCart = new Cart {Customer = await _userManager.FindByIdAsync(userId), CartItems = new List<CartItem>()};
+                userCart = new Cart {Customer = user, CartItems = new List<CartItem>()};
+                await _context.Carts.AddAsync(userCart);
+                await _context.SaveChangesAsync();
             }
-            await _context.Carts.AddAsync(userCart);
-            await _context.SaveChangesAsync();
             return userCart.CartItems;
         }
         
@@ -44,7 +47,12 @@ namespace API.Controllers
             var userId = User.Claims.First(c => c.Type == "UserID").Value;
             var userCart = await _context.Carts.FirstOrDefaultAsync(c => c.Customer.Id == userId);
             var cartList = userCart.CartItems;
+            if (cartList == null)
+            {
+                cartList = new List<CartItem>();
+            }
             cartList.Add(cartItem);
+            userCart.CartItems = cartList;
             await _context.SaveChangesAsync();
 
             return cartList;
@@ -67,9 +75,17 @@ namespace API.Controllers
         public async Task<OkResult> ClearCart()
         {
             var userId = User.Claims.First(c => c.Type == "UserID").Value;
-            var userCart = await _context.Carts.FirstOrDefaultAsync(c => c.Customer.Id == userId);
-            _context.Carts.Remove(userCart);
-            await _context.SaveChangesAsync();
+            var userCart = await _context.Carts.Include(c => c.CartItems)
+                .FirstOrDefaultAsync(c => c.Customer.Id == userId);
+
+            if (userCart?.CartItems != null)
+            {
+                userCart.CartItems.ForEach(i =>
+                {
+                    _context.CartItems.Remove(i);
+                });
+                await _context.SaveChangesAsync();
+            }
             return Ok();
         }
         

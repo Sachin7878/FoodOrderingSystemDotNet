@@ -19,7 +19,7 @@ namespace API.DTO
             Hotel = new HotelModel(order.Hotel);
             OrderItems = order.OrderItems;
             CustomerAddress = order.Customer.Address;
-            Status = order.Status;
+            Status = order.OrderStatus;
         }
     }
 }

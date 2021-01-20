@@ -7,7 +7,6 @@ namespace API.Models
     public class ApplicationUser : IdentityUser
     {
         [Required]
-        [Column(TypeName ="nvarchar(70)")]
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public Address Address { get; set; }

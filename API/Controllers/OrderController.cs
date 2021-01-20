@@ -67,7 +67,7 @@ namespace API.Controllers
 
             var newOrder = new Order
             {
-                Customer = user, Hotel = itemHotel, OrderItems = orderItems, Status = OrderStatus.Pending
+                Customer = user, Hotel = itemHotel, OrderItems = orderItems, OrderStatus = OrderStatus.Pending
             };
 
             var calcAmt = newOrder.CalculateGrandTotal(orderItems);
@@ -87,7 +87,7 @@ namespace API.Controllers
         {
             var myEnum = (OrderStatus) Enum.Parse(typeof(OrderStatus), status, true);
             var orderToUpdate = await _context.Orders.FindAsync(orderId);
-            orderToUpdate.Status = myEnum;
+            orderToUpdate.OrderStatus = myEnum;
             await _context.SaveChangesAsync();
             return Ok();
         }

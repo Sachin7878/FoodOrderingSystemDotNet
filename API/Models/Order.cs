@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using API.DTO;
 
 namespace API.Models
 {
@@ -23,7 +24,16 @@ namespace API.Models
         [Required]
         public List<OrderItem> OrderItems { get; set; }
         public double GrandTotal { get; set; }
-        public OrderStatus Status { get; set; }
+
+        [Column("Status")]
+        public string OrderStatusString
+        {
+            get => OrderStatus.ToString();
+            private set => OrderStatus = value.ParseEnum<OrderStatus>();
+        }
+ 
+        [NotMapped]
+        public OrderStatus OrderStatus { get; set; }
 
         public Order()
         {
@@ -36,7 +46,7 @@ namespace API.Models
             Hotel = hotel;
             OrderItems = orderItems;
             orderItems.ForEach(i => GrandTotal =+ i.Amount);
-            Status = OrderStatus.Pending;
+            OrderStatus = OrderStatus.Pending;
         }
 
         public double CalculateGrandTotal(List<OrderItem> orderItems)
